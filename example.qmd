@@ -1,0 +1,56 @@
+---
+title: "Ace Example"
+format:
+  revealjs: default
+revealjs-plugins:
+  - ace
+---
+
+# Ace editor for Quarto
+
+By default, [Ace editor](https://ace.c9.io) does not integrate well with the dynamic scaling in [Reveal.js](https://revealjs.com) presentations, breaking text sizing and selection.
+
+This `revealjs-plugin` for Quarto implements a workaround, originally provided by [Gottox/reveal.js-ace](https://github.com/Gottox/reveal.js-ace).
+
+## The ace editor
+
+Insert an Ace editor using an `iframe` element. The *data attributes* on the `iframe` sets the ace editor configuration.
+
+The `srcdoc` attribute should contain the text editor content.
+
+``` {.hrml}
+<iframe
+  class="ace"
+  width="100%"
+  height="100px"
+  data-fontSize="20pt" data-mode="r"
+  srcdoc="foo <- rnorm(1000, 10, 5)">
+</iframe>
+```
+
+::: {style="padding-top: 1em;"}
+
+<iframe class="ace" width="100%" height="100px" data-fontSize="20pt" data-mode="r" srcdoc="foo <- rnorm(1000, 10, 5)"></iframe>
+
+:::
+
+## Handling changes
+
+Use the `data-onchange` attribute to handle changes to the editor state. A reference to the Ace editor object will be available in the `editor` variable.
+
+<script>
+handleEditorChange = function(editor) {
+  const value = editor.getValue();
+  const pre = document.createElement('pre');
+  pre.innerHTML = value;
+  document.getElementById('out').replaceChildren(pre);
+}
+</script>
+<iframe class="ace" width="100%" height="120px" data-fontSize="20pt" data-mode="r" srcdoc="foo <- function(x) {
+  x + 123
+}" data-onchange="handleEditorChange(editor)"></iframe>
+
+Output:
+
+::: {id="out"}
+:::
